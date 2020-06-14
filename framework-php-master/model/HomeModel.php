@@ -30,29 +30,23 @@ function updateStudent($name, $id, $oldId){
 	$sql->execute();
     $conn = null;
 }
-function deleteStudent($id){
+function deletePlanning($id){
 	$db = openDatabaseConnection();
-	$sql = $db->prepare("DELETE FROM student WHERE student_id = :id");
+	$sql = $db->prepare("DELETE FROM planning WHERE id = :id");
 	$sql->bindParam(':id', $id);
 	$sql->execute();
     $conn = null;
 }
-function getAllStudentsWithId($id){
+
+function planUser($begintijd,$duur,$datum,$voornaam,$achternaam,$paard){
 	$db = openDatabaseConnection();
-	$sql = $db->prepare("SELECT * FROM student WHERE student_id = :id");
-	$sql->bindParam(':id', $id);
-	$sql->execute();
-	$db = null;
-	return $sql->fetchAll();
-}
-function planUser($begintijd,$duur,$datum,$voornaam,$achternaam){
-	$db = openDatabaseConnection();
-	$sql = $db->prepare("INSERT INTO planning (`begintijd`,`duur`,`datum`,`voornaam`,`achternaam`) VALUES (:begintijd, :duur, :datum, :voornaam,:achternaam)");
+	$sql = $db->prepare("INSERT INTO planning (`begintijd`,`duur`,`datum`,`voornaam`,`achternaam`,`paard`) VALUES (:begintijd, :duur, :datum, :voornaam,:achternaam,:paard)");
     $sql->bindParam(':begintijd', $begintijd);
 	$sql->bindParam(':duur', $duur);
 	$sql->bindParam(':datum', $datum);
 	$sql->bindParam(':voornaam', $voornaam);
 	$sql->bindParam(':achternaam', $achternaam);
+	$sql->bindParam(':paard', $paard);
 	$sql->execute();
     $conn = null;
 }
@@ -63,5 +57,51 @@ function checkUser($voornaam, $achternaam){
 	$sql->bindParam(':achternaam', $achternaam);
 	$sql->execute();
 	$db = null;
+	return $sql->fetchAll();
+}
+function getInfoById($id){
+	$db = openDatabaseConnection();
+	$sql = $db->prepare("SELECT * FROM registreren WHERE id = :id");
+	$sql->bindParam(':id', $id);
+	$sql->execute();
+	$db = null;
+	return $sql->fetchAll();
+}
+function getPlanningByID($id){
+	$db = openDatabaseConnection();
+	$sql = $db->prepare("SELECT * FROM planning WHERE id = :id");
+	$sql->bindParam(":id", $id);
+	$sql->execute();
+	$db = null;
+	return $sql->fetchAll();
+}
+function updatePlanning($begintijd,$duur,$datum,$voornaam,$achternaam,$paard,$id){
+	$db = openDatabaseConnection();
+	$sql = $db->prepare("UPDATE planning SET begintijd = :begintijd, duur = :duur, datum = :datum, voornaam = :voornaam, achternaam = :achternaam, paard = :paard WHERE id = :id");
+    $sql->bindParam(':begintijd', $begintijd);
+	$sql->bindParam(':duur', $duur);
+	$sql->bindParam(':datum', $datum);
+	$sql->bindParam(':voornaam', $voornaam);
+	$sql->bindParam(':achternaam', $achternaam);
+	$sql->bindParam(':duur', $duur);
+	$sql->bindParam(':paard', $paard);
+	$sql->bindParam(':id', $id);
+	$sql->execute();
+	$conn = null;
+}
+function getPlanningByName($voornaam, $achternaam){
+	$db = openDatabaseConnection();
+	$sql = $db->prepare("SELECT * FROM planning WHERE voornaam = :voornaam AND achternaam = :achternaam");
+	$sql->bindParam(":voornaam", $voornaam);
+	$sql->bindParam(":achternaam", $achternaam);
+	$sql->execute();
+	$db = null;
+	return $sql->fetchAll();
+}
+
+function getHorses(){
+	$db = openDatabaseConnection();
+	$sql = $db->prepare("SELECT * FROM horse");
+	$sql->execute();
 	return $sql->fetchAll();
 }
